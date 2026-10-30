@@ -1,3 +1,4 @@
+import { requireUser } from "../lib/util.mjs";
 const MODELS = [
   process.env.IMOLE_MODEL,
   "gpt-4o-mini",
@@ -21,6 +22,8 @@ const json = (data, status = 200) =>
 
 export default async (req) => {
   if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
+    const user = await requireUser(req);
+  if (!user) return json({ error: "Please log in to chat." }, 401);
 
   let body;
   try {
